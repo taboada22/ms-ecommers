@@ -1,8 +1,10 @@
 from dataclasses import dataclass
-
 @dataclass(repr=True, eq=True)
-class Producto:
-    id_producto: int 
-    nombre: str
-    precio: float
-    activado: bool
+class Product:
+    __tablename__ = 'products'
+    __table_args__ = {'schema': 'ms_products'}
+    
+    id_product: int
+    name: str
+    price: float
+    active: bool = True

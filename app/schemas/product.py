@@ -1,12 +1,8 @@
-from marshmallow import fields, Schema, post_load
-from app.models import Producto
+from app import ma
 
-class ProductoSchema(Schema):
-    id_producto = fields.Integer(required=True)
-    nombre = fields.String(required=True)
-    precio = fields.Float(required=True)
-    activado = fields.Boolean(required=True)
+class ProductSchema(ma.Schema):
+    class Meta:
+        fields = ('id_product', 'name', 'price', 'active')
 
-    @post_load
-    def make_producto(self, data, **kwargs):
-        return Producto(**data)
+product_schema = ProductSchema()
+products_schema = ProductSchema(many=True)

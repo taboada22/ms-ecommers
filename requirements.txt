@@ -1,12 +1,10 @@
-Flask==3.0.3
-flask-marshmallow==1.2.1
-marshmallow==3.23
-requests==2.32.3
+python-dotenv
+Flask==3.0.2
+flask-marshmallow==0.15.0
+marshmallow==3.20.1
+redis==5.0.3
+Flask-Caching==2.1.0 # interactua con redis para almacenar en caché
+tenacity==8.2.3  # Librería para reintentos cuando la api falla, se le setea los intentos y el tiempo entre cada reintento en segundos
+flask_cors
 saga_py==1.1.0
-Flask-Caching==2.3.0
-redis==5.1.1
-python-dotenv==1.0.1
-tenacity==9.0.0
-proofdock-chaos-middleware-flask==0.1.3
-proofdock-chaos-middleware-python==0.2.3
-MarkupSafe==2.1.5
+requests==2.32.3

@@ -1,7 +1,6 @@
 import time
-from app.services import CommerceService
-
-from app.models import ShoppingCart  
+from app.Services.builder import BuilderServices
+from app.Models.cart import Cart
 
 
 class CircuitBreaker:
@@ -12,11 +11,11 @@ class CircuitBreaker:
         self.closed = True
 
 
-    def call(self, cart: ShoppingCart):
+    def call(self, cart: Cart):
         if self.closed:
             try:
-                builder = CommerceService()
-                builder.comprar(cart)
+                builder = BuilderServices()
+                builder.buy_saga(cart)
                 self.reset()
                 status_code = 200
                 return status_code

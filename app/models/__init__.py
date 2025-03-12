@@ -1,2 +1,5 @@
-from .product import Producto
-from .shopping_cart import ShoppingCart
+from .payments import Payment
+from .product import Product
+from .purchases import Purchase
+from .stock import Stock
+from .cart import Cart

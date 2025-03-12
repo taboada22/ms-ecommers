@@ -1,27 +1,30 @@
-FROM python:3.12-slim-bookworm
+FROM python:3.10-slim-bullseye
 
-ENV FLASK_CONTEXT=production
+ENV FLASK_CONTEXT=development
 ENV PYTHONUNBUFFERED=1
-ENV PATH=$PATH:/home/flaskapp/.local/bin
+ENV PATH=$PATH:/home/flask/.local/bin
 
-RUN useradd --create-home --home-dir /home/flaskapp flaskapp
+RUN groupadd flaskgroup && useradd -m -g flaskgroup -s /bin/bash flask
+RUN chown -R flask:flaskgroup /home/flask
 RUN apt-get update
-RUN apt-get install -y build-essential curl iputils-ping
+RUN apt-get install -y python3-dev build-essential libpq-dev python3-psycopg2 curl iputils-ping
 RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
 RUN rm -rf /var/lib/apt/lists/*
+RUN ln -sf /user/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN echo "flask ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-WORKDIR /home/flaskapp
+RUN mkdir -p /home/flask/app/e-commerce/
+ADD . /home/flask/app/e-commerce/
 
-USER flaskapp
-RUN mkdir app
+RUN mkdir -p /home/flask/app/e-commerce/app/Logs
+RUN chmod 777 -R /home/flask/app/e-commerce/app/Logs
 
-COPY ./app ./app
-COPY ./app.py .
+WORKDIR /home/flask/app/e-commerce
 
-ADD requirements.txt ./requirements.txt
-
+USER flask
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install gevent==24.10.3 gunicorn==23.0.0
 
-EXPOSE 5005
+EXPOSE 5000
 
-CMD [ "python", "./app.py" ]
+CMD ["gunicorn", "--workers", "2", "--threads", "4","--log-level", "INFO", "--bind", "0.0.0.0:5000", "app:create_app()"]

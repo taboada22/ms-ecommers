@@ -1,16 +1,8 @@
-from marshmallow import validate, fields, Schema, post_load
-from app.models.stock import Stock
+from app import ma
 
-class StockSchema(Schema):
-    id_stock = fields.Integer(required=False)
-    id_product = fields.Integer(required=True)
-    date_transaction = fields.DateTime(required=False, allow_none=True)
-    amount = fields.Float(required=True, validate=validate.Range(min=0))
-    input_output = fields.Integer(required=True, validate=validate.OneOf([1, 2]))
+class StockSchema(ma.Schema):
+    class Meta:
+        fields = ('id_stock', 'id_product', 'transaction_date', 'quantity', 'in_out', 'active')
 
-    @post_load
-    def make_stock(self, data, **kwargs):
-        stock = Stock()
-        for key, value in data.items():
-            setattr(stock, key, value)
-        return stock
+stock_schema = StockSchema()
+stocks_schema = StockSchema(many=True)
